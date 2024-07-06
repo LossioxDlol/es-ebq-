@@ -1,9 +1,8 @@
+local script = [[
 local player = game.Players.LocalPlayer
 local humanoid = player.Character:WaitForChild("Humanoid")
-
 local canClimb = false
 local climbSpeed = 50
-
 local debounce = false
 
 humanoid.Touched:Connect(function(hit)
@@ -20,25 +19,12 @@ humanoid.Touched:Connect(function(hit)
             part = wall
             wall = wall.Parent
         end
-
-        if part:IsA("BasePart") then
-            local dir = (part.Position - player.Character.HumanoidRootPart.Position).unit
-            humanoid:MoveTo(player.Character.HumanoidRootPart.Position + dir * climbSpeed)
-        end
+        -- Código adicional aquí
     end
 
     debounce = false
 end)
+]]
 
-game:GetService("UserInputService").InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.Space then
-        canClimb = true
-    end
-end)
-
-game:GetService("UserInputService").InputEnded:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.Space then
-        canClimb = false
-    end
-end)
-
+local f = loadstring(script)
+f(Commit changes)
