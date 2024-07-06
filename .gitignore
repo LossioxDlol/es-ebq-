@@ -1,41 +1,44 @@
-# Compiled Lua sources
-luac.out
+local player = game.Players.LocalPlayer
+local humanoid = player.Character:WaitForChild("Humanoid")
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
+local canClimb = false
+local climbSpeed = 50
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+local debounce = false
 
-# Precompiled Headers
-*.gch
-*.pch
+humanoid.Touched:Connect(function(hit)
+    if debounce or not canClimb then
+        return
+    end
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
+    debounce = true
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+    local wall = hit.Parent
+    if wall:IsA("BasePart") then
+        local part = wall
+        while wall and wall:IsA("BasePart") do
+            part = wall
+            wall = wall.Parent
+        end
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+        if part:IsA("BasePart") then
+            local dir = (part.Position - player.Character.HumanoidRootPart.Position).unit
+            humanoid:MoveTo(player.Character.HumanoidRootPart.Position + dir * climbSpeed)
+        end
+    end
+
+    debounce = false
+end)
+
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.Space then
+        canClimb = true
+    end
+end)
+
+game:GetService("UserInputService").InputEnded:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.Space then
+        canClimb = false
+    end
+end)
 
